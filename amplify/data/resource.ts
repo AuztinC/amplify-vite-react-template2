@@ -1,4 +1,4 @@
-import { type ClientSchema, a, defineData, secret } from "@aws-amplify/backend";
+import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { scanLogApi } from "../Flex_Api/resource";
 
 /*== STEP 1 ===============================================================
