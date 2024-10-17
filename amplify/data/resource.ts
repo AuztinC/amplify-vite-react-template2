@@ -17,7 +17,7 @@ const schema = a.schema({
     
   scanLogApi: a
   .query()
-  .returns( a.string() )
+  .returns( a.json() )
   .handler(a.handler.function( scanLogApi ))
   .authorization((allow)=>[allow.publicApiKey()]),
 });

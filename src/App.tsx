@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-
+ 
 const client = generateClient<Schema>();
 
 function App() {
@@ -13,22 +13,23 @@ function App() {
     client.models.Todo.observeQuery().subscribe({
       next: (data) => setTodos([...data.items]),
     });
-    // if(!scanLog){
-    //   client.queries.scanLogApi().then(res=> {
-    //     console.log(res.data)
-    //   }).catch(err=>console.log(err))
-    // }
-    
   }, []);
 
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+  // function createTodo() {
+  //   client.models.Todo.create({ content: window.prompt("Todo content") });
+  // }
+
+  function getScanLog() {
+    client.queries.scanLogApi().then(res=> {
+      console.log(res)
+    }).catch(err=>console.log(err))
+    
   }
 
   return (
     <main>
       <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
+      <button onClick={getScanLog}>+ new</button>
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>{todo.content}</li>
@@ -36,6 +37,6 @@ function App() {
       </ul>
     </main>
   );
-}
+} 
 
 export default App;
