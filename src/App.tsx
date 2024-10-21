@@ -3,10 +3,9 @@ import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
  
 const client = generateClient<Schema>();
-
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-  // const [scanLog, setScanLog] = useState()
+  const [scanLog, setScanLog] = useState([])
   
 
   useEffect(() => {
@@ -15,13 +14,21 @@ function App() {
     });
   }, []);
 
+  useEffect(()=>{
+    console.log(scanLog)
+  }, [scanLog])
+
   // function createTodo() {
   //   client.models.Todo.create({ content: window.prompt("Todo content") });
   // }
 
   function getScanLog() {
-    client.queries.scanLogApi().then(res=> {
-      console.log(res)
+    const apiString = '/scan-log/scan-history?page=0&size=20&sort=scanDate%2Cdesc'
+    client.queries.scanLogApi({API_STRING: apiString}).then(res=> {
+      
+      // const response: string = JSON.stringify(res.data);
+      setScanLog(JSON.parse(String(res.data)))
+      
     }).catch(err=>console.log(err))
     
   }
