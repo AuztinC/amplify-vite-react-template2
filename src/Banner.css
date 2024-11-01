@@ -1,0 +1,29 @@
+.banner {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  
+  .banner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f8f8;
+    cursor: pointer;
+  }
+  
+  .banner-content {
+    padding: 15px;
+    background-color: #ffffff;
+  }
+  
+  .arrow {
+    transition: transform 0.3s ease;
+  }
+  
+  .arrow.open {
+    transform: rotate(180deg);
+  }
+  
