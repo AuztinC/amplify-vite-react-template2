@@ -12,6 +12,6 @@ export const handler: Handler = async (event, context) => {
     }
   })
   // ...
-  const response = request.data.content
+  const response = request.data //.content
   return response
 }
