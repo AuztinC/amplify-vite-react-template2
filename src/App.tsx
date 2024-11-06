@@ -28,9 +28,9 @@ function App() {
   useEffect(()=>{
     console.log(awaitingPrep)
   }, [awaitingPrep])
-  // useEffect(()=>{
-  //   console.log("scanlog", scanLog)
-  // }, [scanLog])
+  useEffect(()=>{
+    console.log("scanlog", scanLog)
+  }, [scanLog])
 
 
 
