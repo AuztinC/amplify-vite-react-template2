@@ -24,7 +24,7 @@ const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
 
   useEffect(()=>{
     if(isOpen && !categoryIds){
-      getSingleCategoryIds(id)
+      getSingleCategoryIds(id) //Load categoryIds on first dropdown.
     }
   }, [isOpen])
 
@@ -46,12 +46,21 @@ const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
       console.log(res)
     }).catch((err: any)=>console.log(err))
   }
+
+  function getCategoryLineItems(projectId:string, categoryId:string){
+    const apiString = `/eqlist-line-item/node-list/${categoryId}?equipmentListId=${projectId}&page=0`
+    client({API_STRING: apiString}).then((res: { data: any; })=> {
+      const response = JSON.parse(String(res.data)).content
+      setCategoryIds(response) // need to change to setCategoryLineItems and update an object with key value of {categoryId.displayName}
+      console.log(res)
+    }).catch((err: any)=>console.log(err))
+  }
   
   return (
     <div className="banner">
       <div className="banner-header" onClick={toggleOpen}>
         <h3>{title}</h3>
-        <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span>
+        <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span> 
       </div>
       {isOpen && 
         <div className="banner-content">
@@ -59,7 +68,11 @@ const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
           <ul className="categoryIds">
             {categoryIds?.map((lineItem, index) => (
               <li key={index}>
-                {lineItem?.id}
+                {lineItem?.displayName}
+                  <button onClick={()=>getCategoryLineItems(id, lineItem.id)}>load items</button>
+                <ul className="categoryLineItems">
+                  {}
+                </ul>
               </li>
             ))}
           </ul>

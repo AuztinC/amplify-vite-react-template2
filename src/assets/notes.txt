@@ -1,0 +1,22 @@
+list of api /paths
+
+*/myApiPath =
+/flexApiPath
+
+
+/awaitingPrep = 
+/element-list/row-data?definitionId=a220432c-af33-11df-b8d5-00e08175e43e&headerFieldTypeIds=name&headerFieldTypeIds=documentNumber&headerFieldTypeIds=personResponsibleId&headerFieldTypeIds=statusId&headerFieldTypeIds=calcStartDate&headerFieldTypeIds=calcEndDate&headerFieldTypeIds=locationId&headerFieldTypeIds=pickupLocationId&headerFieldTypeIds=returnLocationId&page=0&size=20&sort=calcStartDate%2Cdesc
+
+/categoryIds(lineIds) =
+/eqlist-line-item/nodes-by-ids?equipmentListId=${projectId}
+
+/categoryLineItems
+//eqlist-line-item/node-list/${categoryId}?equipmentListId=${projectId}&page=0&size=20
+
+
+
+
+
+
+
+

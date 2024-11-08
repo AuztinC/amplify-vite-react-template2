@@ -5,6 +5,7 @@ import Banner from "./Banner";
 import { Authenticator } from "@aws-amplify/ui-react";
 import outputs from '../amplify_outputs.json'
 import { Amplify } from "aws-amplify";
+// import { get } from 'aws-amplify/api';
 
 import '@aws-amplify/ui-react/styles.css';
 
@@ -32,6 +33,19 @@ function App() {
     console.log("scanlog", scanLog)
   }, [scanLog])
 
+
+// async function getItem() {
+//   try {
+//     const restOperation = get({ 
+//       apiName: 'myRestApi',
+//       path: 'items' 
+//     });
+//     const response = await restOperation.response;
+//     console.log('GET call succeeded: ', response);
+//   } catch (error:any) {
+//     console.log('GET call failed: ', JSON.parse(error.response.body));
+//   }
+// }
 
 
   function getScanLog() {
