@@ -26,12 +26,12 @@ function App() {
   const [awaitingPrep, setAwaitingPrep] = useState<AwaitingPrep[] | null>(null)
   
 
-  useEffect(()=>{
-    console.log(awaitingPrep)
-  }, [awaitingPrep])
-  useEffect(()=>{
-    console.log("scanlog", scanLog)
-  }, [scanLog])
+  // useEffect(()=>{
+  //   console.log(awaitingPrep)
+  // }, [awaitingPrep])
+  // useEffect(()=>{
+  //   console.log("scanlog", scanLog)
+  // }, [scanLog])
 
 
 // async function getItem() {

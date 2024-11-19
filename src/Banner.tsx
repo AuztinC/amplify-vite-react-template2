@@ -2,35 +2,50 @@ import React, { useState, useEffect } from 'react';
 import './Banner.css';
 import { format, parseISO} from 'date-fns';
 
-interface categoryId {
-  id: string;
-  displayName: string;
-}
-interface BannerProps {
+interface BannerProps { //Props coming into this component.
   id: string;
   title: string;
   startDate: string;
   client: Function;
+}
+interface categoryId { //Definition of each category header (Audio, Lighting, etc)
+  id: string;
+  displayName: string;
+  categoryLineItems: categoryLineItems[] | []
+}
+interface categoryLineItems { //Definition of each line item within a category
+  id: string;
+  displayName: string;
+  lineQtyInfo: lineQtyInfo;
+  parentLineItemId: string;
+}
+interface lineQtyInfo { //inner object describing completion of prep
+  requiredQty: number;
+  preppedQty: number;
 }
 
 
 const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [categoryIds, setCategoryIds] = useState<categoryId[] | null >(null)
+  const [categoryLineItems, setCategoryLineItems] = useState<categoryLineItems[] | null[]>([])
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
 
   useEffect(()=>{
-    if(isOpen && !categoryIds){
-      getSingleCategoryIds(id) //Load categoryIds on first dropdown.
+    if(isOpen && !categoryIds){ //Load categoryIds on first dropdown.
+      getSingleCategoryIds(id) 
     }
   }, [isOpen])
 
   useEffect(()=>{
     console.log("categoryIds", categoryIds)
   }, [categoryIds])
+  useEffect(()=>{
+    console.log("categoryLineItems", categoryLineItems)
+  }, [categoryLineItems])
 
   function formatDateTime(inputString: string): string {
     const date = parseISO(inputString); // Parse the ISO string into a Date object
@@ -40,19 +55,26 @@ const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
   function getSingleCategoryIds(projectId:string) {
     const apiString = `/eqlist-line-item/nodes-by-ids?equipmentListId=${projectId}`
     client({API_STRING: apiString}).then((res: { data: any; })=> {
+      const response = JSON.parse(String(res.data))
+      setCategoryIds(response)
       
-      // const response: string = JSON.stringify(res.data);
-      setCategoryIds(JSON.parse(String(res.data)))
-      console.log(res)
     }).catch((err: any)=>console.log(err))
   }
 
   function getCategoryLineItems(projectId:string, categoryId:string){
     const apiString = `/eqlist-line-item/node-list/${categoryId}?equipmentListId=${projectId}&page=0`
     client({API_STRING: apiString}).then((res: { data: any; })=> {
-      const response = JSON.parse(String(res.data)).content
-      setCategoryIds(response) // need to change to setCategoryLineItems and update an object with key value of {categoryId.displayName}
-      console.log(res)
+      const responseArray = JSON.parse(String(res.data))?.content
+      const updatedArray = categoryIds?.reduce((acc: any, item) => {
+        let currentCatLineItemArray = responseArray.map((el:categoryLineItems, index: number) => {
+          return el.parentLineItemId == item.id && el 
+        })
+        if (item.displayName) {
+          return [ ...acc, { [item.displayName]: currentCatLineItemArray }];
+        }
+        return acc;
+      }, categoryLineItems);
+      setCategoryLineItems(updatedArray)
     }).catch((err: any)=>console.log(err))
   }
   
@@ -66,12 +88,17 @@ const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
         <div className="banner-content">
           {formatDateTime(startDate)}
           <ul className="categoryIds">
-            {categoryIds?.map((lineItem, index) => (
+            {categoryIds?.map((category, index) => (
+              
               <li key={index}>
-                {lineItem?.displayName}
-                  <button onClick={()=>getCategoryLineItems(id, lineItem.id)}>load items</button>
+                {category?.displayName}
+                <button onClick={()=>getCategoryLineItems(id, category.id)}>load items</button>
                 <ul className="categoryLineItems">
-                  {}
+                  {categoryLineItems?.map((item) => (
+                      <li key={item?.id}>
+                        <strong>{item?.displayName}</strong>
+                      </li>
+                  ))}
                 </ul>
               </li>
             ))}

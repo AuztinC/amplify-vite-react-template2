@@ -16,7 +16,7 @@ list of api /paths
 
 
 
-
-
+auto check progress for awaitingPrep <= 5 days out
+10 items or less auto populate
 
 
