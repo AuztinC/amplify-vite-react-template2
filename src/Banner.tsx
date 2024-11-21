@@ -1,34 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import './Banner.css';
+import './css/Banner.css';
 import { format, parseISO} from 'date-fns';
 
 interface BannerProps { //Props coming into this component.
-  id: string;
-  title: string;
-  startDate: string;
   client: Function;
+  project: AwaitingPrep
 }
-interface categoryId { //Definition of each category header (Audio, Lighting, etc)
+interface AwaitingPrep {
+  id:string;
+  displayName: string;
+  calcStartDate: string;
+  
+}
+interface CategoryId { //Definition of each category header (Audio, Lighting, etc)
   id: string;
   displayName: string;
-  categoryLineItems: categoryLineItems[] | []
 }
-interface categoryLineItems { //Definition of each line item within a category
+interface CategoryLineItems { //Definition of each line item within a category
   id: string;
-  displayName: string;
-  lineQtyInfo: lineQtyInfo;
   parentLineItemId: string;
+  displayName: string;
+  lineQtyInfo: LineQtyInfo;
 }
-interface lineQtyInfo { //inner object describing completion of prep
+interface LineQtyInfo { //inner object describing completion of prep
   requiredQty: number;
   preppedQty: number;
 }
+interface CategoryContent { // New Object containing parentLineItemId as id with related content || lineiteminfo
+  id: string;
+  displayName: string;
+  requiredScannedItems: number;
+  currentScannedItems: number;
+  content: CategoryLineItems[];
+}
 
-
-const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
+const Banner: React.FC<BannerProps> = ({ project, client }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [categoryIds, setCategoryIds] = useState<categoryId[] | null >(null)
-  const [categoryLineItems, setCategoryLineItems] = useState<categoryLineItems[] | null[]>([])
+  const [categoryIds, setCategoryIds] = useState<CategoryId[] | null >(null)
+  const [categoryLineItems, setCategoryLineItems] = useState<CategoryContent[]>([])
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -36,16 +45,19 @@ const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
 
   useEffect(()=>{
     if(isOpen && !categoryIds){ //Load categoryIds on first dropdown.
-      getSingleCategoryIds(id) 
+      getSingleCategoryIds(project.id) 
     }
   }, [isOpen])
 
-  useEffect(()=>{
-    console.log("categoryIds", categoryIds)
-  }, [categoryIds])
-  useEffect(()=>{
-    console.log("categoryLineItems", categoryLineItems)
-  }, [categoryLineItems])
+  // useEffect(()=>{
+  //   console.log("categoryIds", categoryIds)
+  // }, [categoryIds])
+
+  // useEffect(()=>{
+  //   if(categoryLineItems){
+  //     console.log("categoryLineItems", categoryLineItems)
+  //   }
+  // }, [categoryLineItems])
 
   function formatDateTime(inputString: string): string {
     const date = parseISO(inputString); // Parse the ISO string into a Date object
@@ -61,45 +73,111 @@ const Banner: React.FC<BannerProps> = ({ id, title, startDate, client }) => {
     }).catch((err: any)=>console.log(err))
   }
 
+  function buildCategoryLineItems(
+    categoryIds: CategoryId[] | undefined,
+    responseArray: CategoryLineItems[]
+  ): CategoryContent[] {
+    if (!categoryIds || categoryIds.length === 0) return [];
+  
+    return categoryIds.reduce<CategoryContent[]>((acc, item) => {
+      // Filter responseArray to find elements matching the current category id
+      const content = responseArray.filter(el => el.parentLineItemId === item.id);
+
+      // Add to the accumulator only if there's content
+      if (content.length > 0) {
+        acc.push({
+          id: item.id,
+          displayName: item.displayName,
+          content,
+          requiredScannedItems: 0,
+          currentScannedItems: 0
+        });
+      }
+  
+      return acc;
+    }, []);
+  }
+
   function getCategoryLineItems(projectId:string, categoryId:string){
     const apiString = `/eqlist-line-item/node-list/${categoryId}?equipmentListId=${projectId}&page=0`
     client({API_STRING: apiString}).then((res: { data: any; })=> {
       const responseArray = JSON.parse(String(res.data))?.content
-      const updatedArray = categoryIds?.reduce((acc: any, item) => {
-        let currentCatLineItemArray = responseArray.map((el:categoryLineItems, index: number) => {
-          return el.parentLineItemId == item.id && el 
-        })
-        if (item.displayName) {
-          return [ ...acc, { [item.displayName]: currentCatLineItemArray }];
+      
+      
+  if (responseArray && categoryIds) {
+    const updatedArray = buildCategoryLineItems(categoryIds, responseArray);
+
+      setCategoryLineItems((prev: CategoryContent[]) => {
+        // Create a copy of the previous state
+        const updatedCategoryLineItems = [...prev];
+
+      updatedArray.forEach(newItem => {
+        const existingIndex = updatedCategoryLineItems.findIndex(
+          existingItem => existingItem.id === newItem.id
+        );
+
+        if (existingIndex !== -1) {
+          // Update the content field of the existing element
+          updatedCategoryLineItems[existingIndex] = {
+            ...updatedCategoryLineItems[existingIndex],
+            content: newItem.content,
+            requiredScannedItems: newItem.content.reduce((acc, item)=>{
+              acc += item.lineQtyInfo.requiredQty
+              return acc
+            }, 0),
+            currentScannedItems: newItem.content.reduce((acc, item)=>{
+              acc += item.lineQtyInfo.preppedQty
+              return acc
+            }, 0)
+          };
+        } else {
+          // Add the new element if it doesn't already exist
+          updatedCategoryLineItems.push(newItem);
         }
-        return acc;
-      }, categoryLineItems);
-      setCategoryLineItems(updatedArray)
+        });
+
+        return updatedCategoryLineItems;
+      });
+    }
     }).catch((err: any)=>console.log(err))
   }
   
   return (
     <div className="banner">
       <div className="banner-header" onClick={toggleOpen}>
-        <h3>{title}</h3>
+        <h3>{project.displayName}</h3>
         <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span> 
       </div>
       {isOpen && 
         <div className="banner-content">
-          {formatDateTime(startDate)}
+          {formatDateTime(project.calcStartDate)}
           <ul className="categoryIds">
-            {categoryIds?.map((category, index) => (
-              
+          {categoryIds?.map((category, index) => (
               <li key={index}>
+                {/* Display the category's display name */}
                 {category?.displayName}
-                <button onClick={()=>getCategoryLineItems(id, category.id)}>load items</button>
-                <ul className="categoryLineItems">
-                  {categoryLineItems?.map((item) => (
-                      <li key={item?.id}>
-                        <strong>{item?.displayName}</strong>
-                      </li>
+
+                {/* Button to load items for the category */}
+                <button onClick={() => getCategoryLineItems(project.id, category.id)}>Load Items</button>
+
+                {/* Check if a matching categoryLineItem exists */}
+                {categoryLineItems
+                  .filter((el: CategoryContent) => el.id === category.id) // Filter for matching items
+                  .map((el: CategoryContent) => (
+                    <ul key={el.id}>
+                      {/* Map through the content field of the matching categoryLineItem */}
+                      {el.content.map((c: CategoryLineItems, contentIndex) => (
+                        <li key={contentIndex}>
+                          {/* Replace `c.field` with actual properties from LineQtyInfo */}
+                          <span>{c.displayName || "No data"}, Progress: {c.lineQtyInfo.preppedQty/c.lineQtyInfo.requiredQty*100}%</span>
+                          <div>
+                            Required: {c.lineQtyInfo.requiredQty} <br />
+                            Prepped: {c.lineQtyInfo.preppedQty}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   ))}
-                </ul>
               </li>
             ))}
           </ul>

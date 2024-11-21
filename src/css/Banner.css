@@ -1,5 +1,11 @@
+
+:root{
+  --mainBorderColor: #ed1c24;
+}
+
+
 .banner {
-    border: 1px solid #ddd;
+    border: 1px solid var(--mainBorderColor);
     border-radius: 8px;
     margin: 10px 0;
     overflow: hidden;

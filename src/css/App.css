@@ -1,0 +1,22 @@
+:root{
+  --mainBorderColor: #ed1c24;
+}
+
+
+body {
+  background-color: #fff;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Open-Sans', sans-serif;
+}
+
+#app {
+  /* background-color: rgba(0, 0, 0, 0.2); */
+}
+
+.nav-logo {
+  max-width: 175px;
+}
+
+
