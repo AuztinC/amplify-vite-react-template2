@@ -6,7 +6,7 @@ import { generateClient } from "aws-amplify/data";
 import outputs from '../amplify_outputs.json'
 import { Amplify } from "aws-amplify";
 // import { get } from 'aws-amplify/api';
-// import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import '@aws-amplify/ui-react/styles.css';
 
@@ -38,6 +38,7 @@ function Home() {
         <h1>Home</h1>
         
         <button onClick={getScanLog}>Scanlog</button>
+        <Link to={'/warehouse'}>Warehouse</Link>
       </main>
         
   );

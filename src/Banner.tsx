@@ -10,7 +10,6 @@ interface AwaitingPrep {
   id:string;
   displayName: string;
   calcStartDate: string;
-  
 }
 interface CategoryId { //Definition of each category header (Audio, Lighting, etc)
   id: string;
@@ -29,6 +28,7 @@ interface LineQtyInfo { //inner object describing completion of prep
 interface CategoryContent { // New Object containing parentLineItemId as id with related content || lineiteminfo
   id: string;
   displayName: string;
+  calcStartDate: string;
   requiredScannedItems: number;
   currentScannedItems: number;
   content: CategoryLineItems[];
@@ -49,15 +49,31 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
     }
   }, [isOpen])
 
-  // useEffect(()=>{
-  //   console.log("categoryIds", categoryIds)
-  // }, [categoryIds])
+  useEffect(()=>{
+    if(categoryIds){
+      categoryIds.forEach((cat)=>{
+        const currentDate = new Date().getTime(); // Today's date in milliseconds
+        const fiveDaysFromNow = currentDate + 5 * 24 * 60 * 60 * 1000; // Add 5 days in milliseconds
+        
+        const projectDate = new Date(project.calcStartDate).getTime();
+        
+        if (projectDate <= fiveDaysFromNow && projectDate >= currentDate - fiveDaysFromNow) {
+          // The project date is within 5 days from today
+          getCategoryLineItems(project.id, cat.id)
+          console.log("categoryIds", categoryIds)
+        }
+      })
+    }
+    
+  }, [categoryIds])
 
-  // useEffect(()=>{
-  //   if(categoryLineItems){
-  //     console.log("categoryLineItems", categoryLineItems)
-  //   }
-  // }, [categoryLineItems])
+
+
+  useEffect(()=>{
+    if(categoryLineItems){
+      console.log(project.displayName, "categoryLineItems", categoryLineItems)
+    }
+  }, [categoryLineItems])
 
   function formatDateTime(inputString: string): string {
     const date = parseISO(inputString); // Parse the ISO string into a Date object
@@ -68,13 +84,15 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
     const apiString = `/eqlist-line-item/nodes-by-ids?equipmentListId=${projectId}`
     client({API_STRING: apiString}).then((res: { data: any; })=> {
       const response = JSON.parse(String(res.data))
-      setCategoryIds(response)
       
+
+      setCategoryIds(response)
+
     }).catch((err: any)=>console.log(err))
   }
 
   function buildCategoryLineItems(
-    categoryIds: CategoryId[] | undefined,
+    categoryIds: CategoryId[],
     responseArray: CategoryLineItems[]
   ): CategoryContent[] {
     if (!categoryIds || categoryIds.length === 0) return [];
@@ -88,12 +106,13 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
         acc.push({
           id: item.id,
           displayName: item.displayName,
-          content,
+          calcStartDate: project.calcStartDate,
           requiredScannedItems: 0,
-          currentScannedItems: 0
+          currentScannedItems: 0,
+          content,
         });
       }
-  
+
       return acc;
     }, []);
   }
@@ -136,7 +155,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
         }
         });
 
-        return updatedCategoryLineItems;
+        return updatedCategoryLineItems
       });
     }
     }).catch((err: any)=>console.log(err))
@@ -169,7 +188,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
                       {el.content.map((c: CategoryLineItems, contentIndex) => (
                         <li key={contentIndex}>
                           {/* Replace `c.field` with actual properties from LineQtyInfo */}
-                          <span>{c.displayName || "No data"}, Progress: {c.lineQtyInfo.preppedQty/c.lineQtyInfo.requiredQty*100}%</span>
+                          <h3>{c.displayName || "No data"}, Progress: {c.lineQtyInfo.preppedQty/c.lineQtyInfo.requiredQty*100}%</h3>
                           <div>
                             Required: {c.lineQtyInfo.requiredQty} <br />
                             Prepped: {c.lineQtyInfo.preppedQty}
