@@ -1,10 +1,10 @@
 import {  useState } from "react";
-import type { Schema } from "../amplify/data/resource";
+import type { Schema } from "../../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import Banner from "./Banner";
+import Banner from "../warehouse/ProjectBanner";
 import { format, parseISO} from 'date-fns';
 // import { Authenticator } from "@aws-amplify/ui-react";
-import outputs from '../amplify_outputs.json'
+import outputs from '../../../amplify_outputs.json'
 import { Amplify } from "aws-amplify";
 // import { get } from 'aws-amplify/api';
 // import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';

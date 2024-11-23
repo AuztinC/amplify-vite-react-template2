@@ -9,9 +9,9 @@ import { Amplify } from "aws-amplify";
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 
 import '@aws-amplify/ui-react/styles.css';
-import WarehouseDashboard from "./WarehouseDashboard";
-import Home from "./Home";
-import CustomerInformation from "./CustomerInformation";
+import WarehouseDashboard from "./components/warehouse/WarehouseDashboard";
+import Home from "./components/Home";
+import CustomerInformation from "./components/customers/CustomerInformation";
 
 Amplify.configure(outputs)
  

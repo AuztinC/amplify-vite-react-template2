@@ -1,9 +1,9 @@
 import { useState } from "react";
-import type { Schema } from "../amplify/data/resource";
+import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 // import Banner from "./Banner";
 // import { Authenticator } from "@aws-amplify/ui-react";
-import outputs from '../amplify_outputs.json'
+import outputs from '../../amplify_outputs.json'
 import { Amplify } from "aws-amplify";
 // import { get } from 'aws-amplify/api';
 import { format, parseISO} from 'date-fns';
@@ -101,8 +101,8 @@ function Home() {
 
         {scanLog ? 
         <ul>
-          {scanLog.map((scan:Scan)=>
-            <li>
+          {scanLog.map((scan:Scan, index)=>
+            <li key={index}>
               <span style={{fontWeight: '800'}}>{scan.itemName}: {scan.quantity!}</span> 
               <br />
               <span style={{fontWeight: '600'}}>{scan.referenceName}</span>
@@ -115,7 +115,7 @@ function Home() {
           )}
          
 
-        </ul> : <h2>Loading..</h2> }
+        </ul> : <img src="https://ssav.net/wp-content/themes/images/ajax-loader.gif" alt="" /> }
       </main>
         
   );

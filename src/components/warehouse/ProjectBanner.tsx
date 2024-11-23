@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './css/Banner.css';
+import '../../css/Banner.css'
 import { format, parseISO} from 'date-fns';
 
 interface BannerProps { //Props coming into this component.
@@ -180,7 +180,8 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
                 {category?.displayName}
 
                 {/* Button to load items for the category */}
-                <button onClick={() => getCategoryLineItems(project.id, category.id)}>Load Items</button>
+                <button onClick={() => getCategoryLineItems(project.id, category.id)}>Refresh Items</button>
+                {/* <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span>  */}
 
                 {/* Check if a matching categoryLineItem exists */}
                 {categoryLineItems
