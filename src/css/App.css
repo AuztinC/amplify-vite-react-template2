@@ -1,5 +1,6 @@
 :root{
   --mainBorderColor: #ed1c24;
+  --mugWumpButton: #46166b;
 }
 
 
@@ -15,7 +16,37 @@ body {
   /* background-color: rgba(0, 0, 0, 0.2); */
 }
 
+button {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 5px 10px 5px 10px;
+  background-color: #46166b;
+  color: white;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+button:hover {
+  background-color: #ed1c24;
+}
+
+a {
+  color: #46166b;
+  text-decoration: none;
+  font-weight: 400;
+  transition: all 500ms;
+}
+
+a:hover {
+  /* font-weight: 800; */
+  text-decoration: underline;
+}
+
+.currentNav {
+  text-decoration: underline;
+}
+
 .nav-logo {
+  /* background-color: purple; */
   max-width: 175px;
 }
 

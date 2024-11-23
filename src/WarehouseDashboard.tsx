@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import Banner from "./Banner";
@@ -10,6 +10,7 @@ import { Amplify } from "aws-amplify";
 // import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 
 import '@aws-amplify/ui-react/styles.css';
+import { Link } from "react-router-dom";
 
 Amplify.configure(outputs)
  
@@ -29,8 +30,8 @@ function WarehouseDashboard() {
   
 
   // useEffect(()=>{
-  //   console.log(awaitingPrep)
-  // }, [awaitingPrep])
+  //   getAwaitingPrep()
+  // }, [])
 
   function formatDateTime(inputString: string): string {
     const date = parseISO(inputString); // Parse the ISO string into a Date object
@@ -69,7 +70,8 @@ function WarehouseDashboard() {
   return (
       <main id="warehouse-body">
         <h3>Warehouse</h3>
-        <button onClick={getAwaitingPrep}>Refresh Pullsheets</button>
+        <Link to='/'>Home</Link><br />
+        <button className="button refresh-pullsheets" onClick={getAwaitingPrep}>Refresh Pullsheets</button>
         
         <div className="awaitingPrep-container">
           {

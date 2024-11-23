@@ -20,3 +20,6 @@ auto check progress for awaitingPrep <= 5 days out
 10 items or less auto populate
 
 
+known bugs:
+-sometimes not receiving all categoryLineItems under a given categoryId.
+
