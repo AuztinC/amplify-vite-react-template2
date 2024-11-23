@@ -60,7 +60,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
         if (projectDate <= fiveDaysFromNow && projectDate >= currentDate - fiveDaysFromNow) {
           // The project date is within 5 days from today
           getCategoryLineItems(project.id, cat.id)
-          console.log("categoryIds", categoryIds)
+          // console.log(project.displayName, "categoryIds", categoryIds)
         }
       })
     }
@@ -71,7 +71,8 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
 
   useEffect(()=>{
     if(categoryLineItems){
-      console.log(project.displayName, "categoryLineItems", categoryLineItems)
+      console.log(project.displayName, "categoryLineItems", categoryLineItems, categoryIds)
+      console.log(project.id)
     }
   }, [categoryLineItems])
 
@@ -118,7 +119,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
   }
 
   function getCategoryLineItems(projectId:string, categoryId:string){
-    const apiString = `/eqlist-line-item/node-list/${categoryId}?equipmentListId=${projectId}&page=0`
+    const apiString = `/eqlist-line-item/node-list/${categoryId}?equipmentListId=${projectId}`
     client({API_STRING: apiString}).then((res: { data: any; })=> {
       const responseArray = JSON.parse(String(res.data))?.content
       
@@ -136,6 +137,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
         );
 
         if (existingIndex !== -1) {
+          console.log('existing item')
           // Update the content field of the existing element
           updatedCategoryLineItems[existingIndex] = {
             ...updatedCategoryLineItems[existingIndex],
@@ -152,6 +154,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
         } else {
           // Add the new element if it doesn't already exist
           updatedCategoryLineItems.push(newItem);
+          console.log('new item')
         }
         });
 

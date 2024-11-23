@@ -29,13 +29,18 @@ function App() {
   return (
     <Authenticator>
       {({ signOut, user }) => (
+      <>
+      <div className="user-info">
+        <h5>User: {user?.signInDetails?.loginId}</h5> 
+        <button onClick={signOut}>Sign out</button>
+      </div>
       <main id="app">
-        <h5>User: {user?.signInDetails?.loginId}</h5>
-        <button onClick={signOut}>Sign out</button><br />
         <div className="nav-logo-container"><img className="nav-logo" src="https://ssav.net/wp-content/uploads/2023/09/ssav-logo-lg-768x188.png" alt="logo" /><img className="nav-logo" src="https://mugwumpproductions.com/wp-content/uploads/2023/09/mw-logo-lg-600x137.png" alt="logo" /></div>
-        <Link className={ currentLocation.pathname == '/' || currentLocation.pathname == '' ? 'currentNav' : ''} to='/'>Home</Link>
-        <Link className={ currentLocation.pathname == '/warehouse' ? 'currentNav' : ''} to='/warehouse'>Warehouse</Link>
-        <Link className={ currentLocation.pathname == '/customerInfo' ? 'currentNav' : ''} to='/customerInfo'>Customers</Link>
+        <div className="nav-wrapper">
+          <Link className={ currentLocation.pathname == '/' || currentLocation.pathname == '' ? 'current-nav' : ''} to='/'>Home</Link>
+          <Link className={ currentLocation.pathname == '/warehouse' ? 'current-nav' : ''} to='/warehouse'>Warehouse</Link>
+          <Link className={ currentLocation.pathname == '/customerInfo' ? 'current-nav' : ''} to='/customerInfo'>Customers</Link>
+        </div>
           <Routes>
             <Route path="/"  element={<Home />}/>
             <Route path="warehouse"  element={<WarehouseDashboard />}/>
@@ -43,6 +48,7 @@ function App() {
           </Routes>
 
       </main>
+      </>
         
       )}
       

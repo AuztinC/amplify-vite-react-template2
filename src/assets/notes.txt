@@ -22,4 +22,5 @@ auto check progress for awaitingPrep <= 5 days out
 
 known bugs:
 -sometimes not receiving all categoryLineItems under a given categoryId.
+-projects are not getting grouped by date
 
