@@ -1,5 +1,5 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
-import { scanLogApi } from "../Flex_Api/resource";
+import { FlexApiFunction } from "../Flex_Api/resource";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -15,13 +15,13 @@ const schema = a.schema({
     .authorization((allow) => [allow.publicApiKey()]),
 
     
-  scanLogApi: a
+  FlexApiFunction: a
   .query()
   .arguments({
     API_STRING: a.string()
   })
   .returns( a.json() )
-  .handler(a.handler.function( scanLogApi ))
+  .handler(a.handler.function( FlexApiFunction ))
   .authorization((allow)=>[allow.publicApiKey()]),
 });
 

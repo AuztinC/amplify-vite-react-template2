@@ -14,6 +14,7 @@ interface AwaitingPrep {
 interface CategoryId { //Definition of each category header (Audio, Lighting, etc)
   id: string;
   displayName: string;
+  isOpen: boolean;
 }
 interface CategoryLineItems { //Definition of each line item within a category
   id: string;
@@ -43,11 +44,17 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
     setIsOpen(!isOpen);
   };
 
+  // useEffect(()=>{
+  //   if(isOpen && !categoryIds){ //Load categoryIds on first dropdown.
+  //     getSingleCategoryIds(project.id) 
+  //   }
+  // }, [isOpen])
+
   useEffect(()=>{
-    if(isOpen && !categoryIds){ //Load categoryIds on first dropdown.
+    if(!categoryIds){ //Load categoryIds
       getSingleCategoryIds(project.id) 
     }
-  }, [isOpen])
+  }, [])
 
   useEffect(()=>{
     if(categoryIds){
@@ -137,7 +144,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
         );
 
         if (existingIndex !== -1) {
-          console.log('existing item')
+          // console.log('existing item')
           // Update the content field of the existing element
           updatedCategoryLineItems[existingIndex] = {
             ...updatedCategoryLineItems[existingIndex],
@@ -154,7 +161,7 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
         } else {
           // Add the new element if it doesn't already exist
           updatedCategoryLineItems.push(newItem);
-          console.log('new item')
+          // console.log('new item')
         }
         });
 
@@ -164,6 +171,11 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
     }).catch((err: any)=>console.log(err))
   }
   
+  function toggleOpenCategory(category: CategoryId): void {
+    category.isOpen = !category.isOpen
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <div className="banner">
       <div className="banner-header" onClick={toggleOpen}>
@@ -181,10 +193,10 @@ const Banner: React.FC<BannerProps> = ({ project, client }) => {
 
                 {/* Button to load items for the category */}
                 <button onClick={() => getCategoryLineItems(project.id, category.id)}>Refresh Items</button>
-                {/* <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span>  */}
+                <span onClick={() => toggleOpenCategory(category)} className={`arrow ${category.isOpen ? 'open' : ''}`}>▼</span> 
 
                 {/* Check if a matching categoryLineItem exists */}
-                {categoryLineItems
+                { category.isOpen ?? categoryLineItems
                   .filter((el: CategoryContent) => el.id === category.id) // Filter for matching items
                   .map((el: CategoryContent) => (
                     <ul key={el.id}>

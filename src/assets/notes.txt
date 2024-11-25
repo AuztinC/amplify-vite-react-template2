@@ -15,12 +15,21 @@ list of api /paths
 
 
 
-
-auto check progress for awaitingPrep <= 5 days out
+add auth : done
+access scanlog : done
+create new user through auth : 
+get all awaiting prep project : done
+auto check progress for awaitingPrep <= 5 days  : done
 10 items or less auto populate
+add notes for items, project also ?
+
+work out sms protocal
+link with lasso calenders to get users for project
+access Truck Driver information to alert for missing items
+
+
+get customer information
 
 
 known bugs:
--sometimes not receiving all categoryLineItems under a given categoryId.
--projects are not getting grouped by date
 

@@ -39,7 +39,7 @@ function WarehouseDashboard() {
 
   function getAwaitingPrep() {
     const apiString = '/element-list/row-data?definitionId=a220432c-af33-11df-b8d5-00e08175e43e&headerFieldTypeIds=name&headerFieldTypeIds=documentNumber&headerFieldTypeIds=personResponsibleId&headerFieldTypeIds=statusId&headerFieldTypeIds=calcStartDate&headerFieldTypeIds=calcEndDate&headerFieldTypeIds=locationId&headerFieldTypeIds=pickupLocationId&headerFieldTypeIds=returnLocationId&page=0&size=20&sort=calcStartDate%2Cdesc'
-    client.queries.scanLogApi({API_STRING: apiString}).then(res=> {
+    client.queries.FlexApiFunction({API_STRING: apiString}).then(res=> {
       
       const response = JSON.parse(String(res.data)).content
 
@@ -77,7 +77,7 @@ function WarehouseDashboard() {
                 {/* Display calcStartDate */}
                 <h4>{formatDateTime(startDate)}</h4>
                 {groupedEvents[startDate]?.map((project, index) => (
-                  <Banner key={index} client={client.queries.scanLogApi} project={project} />
+                  <Banner key={index} client={client.queries.FlexApiFunction} project={project} />
                 ))}
               </div>
             })

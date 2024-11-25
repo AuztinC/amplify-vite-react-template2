@@ -7,14 +7,14 @@ import { BrowserRouter } from "react-router-dom";
 import "./css/App.css"
 
 Amplify.configure(outputs);
-const existingConfig = Amplify.getConfig();
-Amplify.configure({
-  ...existingConfig,
-  API: {
-    ...existingConfig.API,
-    REST: outputs.custom.API,
-  },
-});
+// const existingConfig = Amplify.getConfig();
+// Amplify.configure({
+//   ...existingConfig,
+//   API: {
+//     ...existingConfig.API,
+//     REST: outputs.custom.API,
+//   },
+// });
 ReactDOM.createRoot(document.getElementById("root")!).render(
   
     <BrowserRouter><App /></BrowserRouter>
