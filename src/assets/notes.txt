@@ -13,20 +13,23 @@ list of api /paths
 /categoryLineItems
 //eqlist-line-item/node-list/${categoryId}?equipmentListId=${projectId}&page=0&size=20
 
-
+add table in back end for bugs, display for admins
 
 add auth : done
 access scanlog : done
-create new user through auth : 
 get all awaiting prep project : done
 auto check progress for awaitingPrep <= 5 days  : done
+create new user through auth : 
 10 items or less auto populate
 add notes for items, project also ?
+refresh to same hash
+cache 
 
 work out sms protocal
 link with lasso calenders to get users for project
 access Truck Driver information to alert for missing items
 
+create G page for 
 
 get customer information
 

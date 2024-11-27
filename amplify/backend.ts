@@ -22,3 +22,8 @@ const backend = defineBackend({
 });
 
 
+const { cfnUserPool } = backend.auth.resources.cfnResources
+// an empty array denotes "email" and "phone_number" cannot be used as a username
+cfnUserPool.usernameAttributes = []
+
+
