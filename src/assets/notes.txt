@@ -19,7 +19,7 @@ add auth : done
 access scanlog : done
 get all awaiting prep project : done
 auto check progress for awaitingPrep <= 5 days  : done
-create new user through auth : 
+create new user through auth : done (need to set up lambda trigger)
 10 items or less auto populate
 add notes for items, project also ?
 refresh to same hash
